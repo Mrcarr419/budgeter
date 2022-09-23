@@ -1,0 +1,77 @@
+import csv
+
+DATA_FILE = 'data.csv'
+FIELDNAMES = ['date', 'transaction', 'amount', 'note']
+    
+  
+
+def load_entries(file = DATA_FILE):
+  # creating a list  
+  compiled_entries = []  
+  with open(file, "r", newline='') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+      compiled_entries.append(row)
+  return compiled_entries   
+     
+
+def view_previous_entries(compiled_entries):
+  print('Date', 'Type', 'Amount', 'Note', sep = '\t')
+  print('-'*30, sep = '\t')
+  for row in compiled_entries:
+      print(row['date'], row['transaction'], f'${row["amount"]}',row['note'], sep='\t')
+      print('-'*30, sep = '\t')
+
+
+def display_profit_loss(compiled_entries):
+  income = 0 
+  expense = 0
+  for row in compiled_entries:
+    if row['transaction'] == 'Income':
+      income += float(row['amount'])
+    elif row['transaction'] == 'Expense':
+      expense += float(row['amount'])
+  profit = income - expense
+  
+  print('-'*30, sep = '\t')
+  print('The total income is:',f'${income}', sep = '\t')  
+  print('The total expenses are:', f'${expense}', sep = '\t')
+  print('The total profit is:', f'${profit}', sep = '\t')
+  print('-'*30, sep = '\t')
+  
+
+def add_new_entry(compiled_entries):
+  print('Date of transaction (YYYY-MM-DD):')
+  date = input()
+  
+  print('Was this Income (Y/N):')
+  is_income = input()
+  if is_income not in ['Y','y','N','n']:
+    print('That was not a valid choice, please try again')
+    is_income = input()
+  if is_income == 'Y' or 'y':     
+    #if response is Y, save as Income and if the respones is N, save as Expense
+    transaction = 'Income'
+  elif is_income == 'N' or 'n':
+    transaction = 'Expense'
+  
+  print('Amount:')
+  amount = input() 
+
+  print('Describe the transaction:')
+  note = input()
+  
+  new_row = {
+  'date':date,
+  'transaction': transaction,
+  'amount': amount,
+  'note':note
+  }
+  
+  with open(DATA_FILE, 'a', newline='') as csvfile:
+   writer = csv.DictWriter(csvfile, FIELDNAMES)
+   writer.writerow(new_row)
+
+  compiled_entries.append(new_row)
+
+
