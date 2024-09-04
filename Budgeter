@@ -4,7 +4,7 @@ DATA_FILE = 'data.csv'
 FIELDNAMES = ['date', 'transaction', 'amount', 'note']
     
   
-
+#
 def load_entries(file = DATA_FILE):
   # creating a list  
   compiled_entries = []  
